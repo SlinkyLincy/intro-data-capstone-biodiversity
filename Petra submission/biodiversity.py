@@ -53,7 +53,7 @@ print(observations.head(10))
 # In[47]:
 
 
-print(len(species))
+print(species.scientific_name.nunique())
 
 
 # What are the different values of `category` in `species`?
@@ -86,7 +86,7 @@ print(species.conservation_status.unique())
 # In[50]:
 
 
-conservation_numbers = species.groupby('conservation_status').scientific_name.count().reset_index()
+conservation_numbers = species.groupby('conservation_status').scientific_name.nunique().reset_index()
 print(conservation_numbers)
 
 
@@ -132,7 +132,7 @@ species.fillna('No Intervention', inplace=True)
 # In[54]:
 
 
-conservation_numbers = species.groupby('conservation_status').scientific_name.count().reset_index()
+conservation_numbers = species.groupby('conservation_status').scientific_name.nunique().reset_index()
 print(conservation_numbers)
 
 
@@ -187,7 +187,7 @@ plt.show()
 # In[57]:
 
 
-species['is_protected'] = species.conservation_status.apply(lambda value: 'True' if value != 'No Intervention'                                                             else 'False')
+species['is_protected'] = species.conservation_status.apply(lambda value: 'True' if value != 'No Intervention' else 'False')
 
 
 # Let's group by *both* `category` and `is_protected`.  Save your results to `category_counts`.
@@ -195,7 +195,7 @@ species['is_protected'] = species.conservation_status.apply(lambda value: 'True'
 # In[58]:
 
 
-category_counts = species.groupby(['category', 'is_protected']).scientific_name.count().reset_index()
+category_counts = species.groupby(['category', 'is_protected']).scientific_name.nunique().reset_index()
 
 
 # Examine `category_count` using `head()`.
@@ -237,7 +237,7 @@ print(category_pivot)
 
 # This bit of code shows just below that the columns are renamed. However,
 #lower beleow, the columns have the orignal names ('False' and 'True')
-category_pivot.rename(columns = {'False' : 'not_protected', 'True' : 'protected'})
+category_pivot.rename(columns = {'False' : 'not_protected', 'True' : 'protected'}, inplace=True)
 print(category_pivot)
 
 
@@ -246,7 +246,7 @@ print(category_pivot)
 # In[63]:
 
 
-category_pivot['percent_protected'] = 100.0 * category_pivot['True'] / (category_pivot['True'] +category_pivot['False'])
+category_pivot['percent_protected'] = 100.0 * category_pivot['protected'] / (category_pivot['protected'] +category_pivot['not_protected'])
 
 
 # Examine `category_pivot`.
@@ -436,10 +436,10 @@ print(min_det_effect)
 # In[79]:
 
 
-sample_size_Bryce = 510
-sample_size_Yellowstone = 890
-Bryce_observations = sample_size_Bryce / float(250)
-Yellowstone_observations = sample_size_Yellowstone / float(507)
+sample_size = 510
+
+Bryce_observations = sample_size / float(250)
+Yellowstone_observations = sample_size / float(507)
 print(Bryce_observations)
 print(Yellowstone_observations)
 
